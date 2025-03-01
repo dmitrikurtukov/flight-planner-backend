@@ -21,3 +21,117 @@ databaseChangeLog:
               - column:
                   name: price
                   type: decimal
+
+  - changeSet:
+      id: 2
+      author: Dmitri
+      changes:
+        - createTable:
+            tableName: seats
+            columns:
+              - column:
+                  name: id
+                  type: bigserial
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: flight_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_seat_flight
+                    references: flights(id)
+              - column:
+                  name: seat_number
+                  type: varchar(10)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: seat_class
+                  type: varchar(50)
+              - column:
+                  name: is_reserved
+                  type: boolean
+                  constraints:
+                    nullable: false
+
+  - changeSet:
+      id: 3
+      author: Dmitri
+      changes:
+        - createTable:
+            tableName: passengers
+            columns:
+              - column:
+                  name: id
+                  type: bigserial
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: first_name
+                  type: varchar(50)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: last_name
+                  type: varchar(50)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: email
+                  type: varchar(255)
+                  constraints:
+                    unique: true
+                    nullable: false
+
+  - changeSet:
+      id: 4
+      author: Dmitri
+      changes:
+        - createTable:
+            tableName: bookings
+            columns:
+              - column:
+                  name: id
+                  type: bigserial
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: passenger_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_booking_passenger
+                    references: passengers(id)
+              - column:
+                  name: seat_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_booking_seat
+                    references: seats(id)
+              - column:
+                  name: booking_date
+                  type: timestamp
+                  constraints:
+                    nullable: false
+
+  - changeSet:
+      id: 5
+      author: Dmitri
+      changes:
+        - addNotNullConstraint:
+            tableName: flights
+            columnName: destination
+            columnDataType: varchar(255)
+        - addNotNullConstraint:
+            tableName: flights
+            columnName: date
+            columnDataType: timestamp
+        - addNotNullConstraint:
+            tableName: flights
+            columnName: price
+            columnDataType: decimal(10,2)
