@@ -135,3 +135,16 @@ databaseChangeLog:
             tableName: flights
             columnName: price
             columnDataType: decimal(10,2)
+
+  - changeSet:
+      id: 6
+      author: Dmitri
+      changes:
+        - addColumn:
+            tableName: flights
+            columns:
+              - column:
+                  name: duration
+                  type: integer
+                  constraints:
+                    nullable: false

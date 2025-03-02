@@ -28,6 +28,9 @@ public class FlightEntity {
     @Column(nullable = false)
     private BigDecimal price;
 
+    @Column(nullable = false)
+    private Integer duration;
+
     @OneToMany(mappedBy = "flight", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<SeatEntity> seats;
 }
