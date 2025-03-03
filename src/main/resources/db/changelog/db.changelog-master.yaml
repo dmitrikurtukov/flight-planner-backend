@@ -148,3 +148,14 @@ databaseChangeLog:
                   type: integer
                   constraints:
                     nullable: false
+
+  - changeSet:
+      id: 7
+      author: Dmitri
+      changes:
+        - dropTable:
+            tableName: passengers
+            cascadeConstraints: true
+        - dropTable:
+            tableName: bookings
+            cascadeConstraints: true

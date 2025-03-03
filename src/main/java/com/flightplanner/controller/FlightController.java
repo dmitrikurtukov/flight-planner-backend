@@ -6,7 +6,6 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -42,14 +41,6 @@ public class FlightController {
     @GetMapping("/{id}")
     public ResponseEntity<FlightDto> getFlightById(@PathVariable Long id) {
         return ResponseEntity.ok(flightService.getFlightById(id));
-    }
-
-    @Operation(summary = "Create a new flight", description = "Add a new flight to the system.")
-    @ApiResponse(responseCode = "201", description = "Flight successfully created")
-    @ApiResponse(responseCode = "400", description = "Invalid flight data provided")
-    @PostMapping
-    public ResponseEntity<FlightDto> addFlight(@RequestBody FlightDto flightDto) {
-        return new ResponseEntity<>(flightService.addFlight(flightDto), HttpStatus.CREATED);
     }
 
     @Operation(summary = "Delete a flight by ID", description = "Delete a flight from the system based on its ID.")

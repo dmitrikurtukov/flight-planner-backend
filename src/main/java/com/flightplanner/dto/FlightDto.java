@@ -1,5 +1,6 @@
 package com.flightplanner.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -22,7 +23,8 @@ public class FlightDto {
     @Schema(description = "Destination of the flight", example = "New York")
     private String destination;
 
-    @Schema(description = "Flight departure time", example = "2025-03-10T15:30:00")
+    @Schema(description = "Flight departure time", example = "2025-03-10T15:30")
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm")
     private LocalDateTime departureTime;
 
     @Schema(description = "Ticket price", example = "350.50")

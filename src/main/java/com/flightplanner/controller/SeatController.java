@@ -24,7 +24,6 @@ public class SeatController {
     @Operation(summary = "Get seats by flight ID", description = "Retrieve a list of available seats for a given flight.")
     @ApiResponse(responseCode = "200", description = "Successfully retrieved seats")
     @ApiResponse(responseCode = "400", description = "Invalid flight ID format")
-    @ApiResponse(responseCode = "404", description = "Flight not found or has no seats")
     @GetMapping
     public ResponseEntity<List<SeatDto>> getSeatsByFlightId(@RequestParam Long flightId) {
         return ResponseEntity.ok(seatService.getSeatsByFlightId(flightId));
