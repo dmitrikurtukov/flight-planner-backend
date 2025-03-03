@@ -6,6 +6,8 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,7 +25,7 @@ public class FlightController {
     )
     @ApiResponse(responseCode = "200", description = "Successfully retrieved list of flights")
     @GetMapping
-    public List<FlightDto> getFlights(
+    public ResponseEntity<List<FlightDto>> getFlights(
             @RequestParam(required = false) String destination,
             @RequestParam(required = false) String departureDate,
             @RequestParam(required = false) Integer minDuration,
@@ -31,30 +33,31 @@ public class FlightController {
             @RequestParam(required = false) Double minPrice,
             @RequestParam(required = false) Double maxPrice
     ) {
-        return flightService.getFilteredFlights(destination, departureDate, minDuration, maxDuration, minPrice, maxPrice);
+        return ResponseEntity.ok(flightService.getFilteredFlights(destination, departureDate, minDuration, maxDuration, minPrice, maxPrice));
     }
 
     @Operation(summary = "Get flight by ID", description = "Retrieve a flight by its ID.")
     @ApiResponse(responseCode = "200", description = "Successfully retrieved flight")
     @ApiResponse(responseCode = "404", description = "Flight not found with given ID")
     @GetMapping("/{id}")
-    public FlightDto getFlightById(@PathVariable Long id) {
-        return flightService.getFlightById(id);
+    public ResponseEntity<FlightDto> getFlightById(@PathVariable Long id) {
+        return ResponseEntity.ok(flightService.getFlightById(id));
     }
 
     @Operation(summary = "Create a new flight", description = "Add a new flight to the system.")
-    @ApiResponse(responseCode = "200", description = "Flight successfully created")
+    @ApiResponse(responseCode = "201", description = "Flight successfully created")
     @ApiResponse(responseCode = "400", description = "Invalid flight data provided")
     @PostMapping
-    public FlightDto addFlight(@RequestBody FlightDto flightDto) {
-        return flightService.addFlight(flightDto);
+    public ResponseEntity<FlightDto> addFlight(@RequestBody FlightDto flightDto) {
+        return new ResponseEntity<>(flightService.addFlight(flightDto), HttpStatus.CREATED);
     }
 
     @Operation(summary = "Delete a flight by ID", description = "Delete a flight from the system based on its ID.")
     @ApiResponse(responseCode = "204", description = "Flight successfully deleted")
     @ApiResponse(responseCode = "404", description = "Flight not found with given ID")
     @DeleteMapping("/{id}")
-    public void deleteFlight(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteFlight(@PathVariable Long id) {
         flightService.deleteFlight(id);
+        return ResponseEntity.noContent().build();
     }
 }

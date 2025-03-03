@@ -19,6 +19,9 @@ public class SeatEntity {
     @JoinColumn(name = "flight_id", nullable = false)
     private FlightEntity flight;
 
+    @Column(name = "seat_number")
+    private String seatNumber;
+
     @Column(name = "seat_class")
     private String seatClass;
 
