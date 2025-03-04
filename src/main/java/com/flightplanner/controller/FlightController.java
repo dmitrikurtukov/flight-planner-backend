@@ -42,13 +42,4 @@ public class FlightController {
     public ResponseEntity<FlightDto> getFlightById(@PathVariable Long id) {
         return ResponseEntity.ok(flightService.getFlightById(id));
     }
-
-    @Operation(summary = "Delete a flight by ID", description = "Delete a flight from the system based on its ID.")
-    @ApiResponse(responseCode = "204", description = "Flight successfully deleted")
-    @ApiResponse(responseCode = "404", description = "Flight not found with given ID")
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteFlight(@PathVariable Long id) {
-        flightService.deleteFlight(id);
-        return ResponseEntity.noContent().build();
-    }
 }

@@ -1,8 +1,10 @@
 package com.flightplanner.service;
 
 import com.flightplanner.dto.SeatDto;
+import com.flightplanner.entity.SeatEntity;
 import com.flightplanner.mappers.SeatMapper;
 import com.flightplanner.repository.SeatRepository;
+import com.flightplanner.utils.SeatFilterHelper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -15,7 +17,13 @@ public class SeatService {
     private final SeatRepository seatRepository;
     private final SeatMapper seatMapper;
 
-    public List<SeatDto> getSeatsByFlightId(Long flightId) {
-        return seatMapper.toDtoList(seatRepository.findByFlightId(flightId));
+    public List<SeatDto> getRecommendedSeatsForFlight(Long flightId, Integer passengerCount, Boolean windowPreferred, Boolean extraLegroom, Boolean nearExit, Boolean seatsTogether) {
+        List<SeatEntity> availableSeats = seatRepository.findByFlightId(flightId).stream()
+                .filter(seat -> !seat.getIsReserved())
+                .toList();
+
+        List<SeatEntity> filteredSeats = SeatFilterHelper.filterSeats(availableSeats, windowPreferred, extraLegroom, nearExit, passengerCount, seatsTogether);
+
+        return seatMapper.toDtoList(filteredSeats);
     }
 }

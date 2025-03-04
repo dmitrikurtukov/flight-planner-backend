@@ -34,9 +34,4 @@ public class FlightService {
         FlightEntity flight = flightRepository.findById(id).orElseThrow(() -> new FlightNotFoundException(id));
         return flightMapper.toDto(flight);
     }
-
-    public void deleteFlight(Long id) {
-        FlightEntity flightEntity = flightRepository.findById(id).orElseThrow(() -> new FlightNotFoundException(id));
-        flightRepository.delete(flightEntity);
-    }
 }

@@ -21,12 +21,23 @@ import java.util.List;
 public class SeatController {
     private final SeatService seatService;
 
-    @Operation(summary = "Get seats by flight ID", description = "Retrieve a list of available seats for a given flight.")
+    @Operation(
+            summary = "Get seats by flight ID with optional recommendations",
+            description = "Retrieve a list of available seats for a given flight. If filters are provided, returns recommended seats based on criteria."
+    )
     @ApiResponse(responseCode = "200", description = "Successfully retrieved seats")
     @ApiResponse(responseCode = "400", description = "Invalid flight ID format")
     @GetMapping
-    public ResponseEntity<List<SeatDto>> getSeatsByFlightId(@RequestParam Long flightId) {
-        return ResponseEntity.ok(seatService.getSeatsByFlightId(flightId));
+    public ResponseEntity<List<SeatDto>> getSeatsByFlightId(
+            @RequestParam Long flightId,
+            @RequestParam(required = false) Integer passengerCount,
+            @RequestParam(required = false) Boolean windowPreferred,
+            @RequestParam(required = false) Boolean extraLegroom,
+            @RequestParam(required = false) Boolean nearExit,
+            @RequestParam(required = false) Boolean seatsTogether
+    ) {
+        return ResponseEntity.ok(
+                seatService.getRecommendedSeatsForFlight(flightId, passengerCount, windowPreferred, extraLegroom, nearExit, seatsTogether)
+        );
     }
-
 }
