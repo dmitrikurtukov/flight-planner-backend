@@ -34,10 +34,11 @@ public class SeatController {
             @RequestParam(required = false) Boolean windowPreferred,
             @RequestParam(required = false) Boolean extraLegroom,
             @RequestParam(required = false) Boolean nearExit,
-            @RequestParam(required = false) Boolean seatsTogether
+            @RequestParam(required = false) Boolean seatsTogether,
+            @RequestParam(required = false) String seatClass
     ) {
         return ResponseEntity.ok(
-                seatService.getRecommendedSeatsForFlight(flightId, passengerCount, windowPreferred, extraLegroom, nearExit, seatsTogether)
+                seatService.getRecommendedSeatsForFlight(flightId, passengerCount, windowPreferred, extraLegroom, nearExit, seatsTogether, seatClass)
         );
     }
 }

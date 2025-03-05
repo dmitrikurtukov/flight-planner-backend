@@ -9,7 +9,13 @@ import java.util.stream.Collectors;
 public class SeatFilterHelper {
     private SeatFilterHelper() {}
 
-    public static List<SeatEntity> filterSeats(List<SeatEntity> seats, Boolean windowPreferred, Boolean extraLegroom, Boolean nearExit, Integer passengerCount, Boolean seatsTogether) {
+    public static List<SeatEntity> filterSeats(List<SeatEntity> seats,
+                                               Boolean windowPreferred,
+                                               Boolean extraLegroom,
+                                               Boolean nearExit,
+                                               Integer passengerCount,
+                                               Boolean seatsTogether,
+                                               String seatClass) {
         if (Boolean.TRUE.equals(windowPreferred))
             seats = filterByWindow(seats);
 
@@ -21,6 +27,9 @@ public class SeatFilterHelper {
 
         if (Boolean.TRUE.equals(seatsTogether) && passengerCount != null && passengerCount > 1)
             seats = filterSeatsTogether(seats, passengerCount);
+
+        if (seatClass != null)
+            seats = filterByClass(seats, seatClass);
 
         return seats;
     }
@@ -60,5 +69,9 @@ public class SeatFilterHelper {
         }
 
         return seats;
+    }
+
+    public static List<SeatEntity> filterByClass(List<SeatEntity> seats, String seatClass) {
+        return seats.stream().filter(seat -> seat.getSeatClass().equals(seatClass)).toList();
     }
 }

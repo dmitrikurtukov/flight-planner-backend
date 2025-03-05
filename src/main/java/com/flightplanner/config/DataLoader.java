@@ -54,7 +54,14 @@ public class DataLoader {
                 SeatEntity seat = new SeatEntity();
                 seat.setFlight(flight);
                 seat.setSeatNumber(row + String.valueOf(col));
-                seat.setSeatClass(row <= 5 ? "Business" : "Economy");
+
+                if (row <= 2)
+                    seat.setSeatClass("First Class");
+                else if (row <= 5)
+                    seat.setSeatClass("Business");
+                else
+                    seat.setSeatClass("Economy");
+
                 seat.setIsReserved(random.nextDouble() < 0.3); // 30% of flight seats will be reserved
 
                 seats.add(seat);
