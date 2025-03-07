@@ -1,6 +1,7 @@
 package com.flightplanner.controller;
 
 import com.flightplanner.dto.FlightDto;
+import com.flightplanner.dto.FlightFilterCriteria;
 import com.flightplanner.service.FlightService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -30,9 +31,11 @@ public class FlightController {
             @RequestParam(required = false) Integer minDuration,
             @RequestParam(required = false) Integer maxDuration,
             @RequestParam(required = false) Double minPrice,
-            @RequestParam(required = false) Double maxPrice
+            @RequestParam(required = false) Double maxPrice,
+            @RequestParam(required = false) String sortBy
     ) {
-        return ResponseEntity.ok(flightService.getFilteredFlights(destination, departureDate, minDuration, maxDuration, minPrice, maxPrice));
+        FlightFilterCriteria criteria = new FlightFilterCriteria(destination, departureDate, minDuration, maxDuration, minPrice, maxPrice, sortBy);
+        return ResponseEntity.ok(flightService.getFlights(criteria));
     }
 
     @Operation(summary = "Get flight by ID", description = "Retrieve a flight by its ID.")

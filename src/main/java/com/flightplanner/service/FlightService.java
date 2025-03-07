@@ -1,10 +1,12 @@
 package com.flightplanner.service;
 
 import com.flightplanner.dto.FlightDto;
+import com.flightplanner.dto.FlightFilterCriteria;
 import com.flightplanner.entity.FlightEntity;
 import com.flightplanner.exceptions.FlightNotFoundException;
 import com.flightplanner.mappers.FlightMapper;
 import com.flightplanner.repository.FlightRepository;
+import com.flightplanner.utils.FlightFilterHelper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -16,18 +18,10 @@ public class FlightService {
     private final FlightRepository flightRepository;
     private final FlightMapper flightMapper;
 
-    public List<FlightDto> getFilteredFlights(String destination, String departureDate, Integer minDuration, Integer maxDuration, Double minPrice, Double maxPrice) {
-        List<FlightEntity> flights = flightRepository.findAll();
-
-        return flights.stream()
-                .filter(flight -> destination == null || flight.getDestination().equalsIgnoreCase(destination))
-                .filter(flight -> departureDate == null || flight.getDepartureTime().toLocalDate().toString().equals(departureDate))
-                .filter(flight -> minDuration == null || flight.getDuration() >= minDuration)
-                .filter(flight -> maxDuration == null || flight.getDuration() <= maxDuration)
-                .filter(flight -> minPrice == null || flight.getPrice().doubleValue() >= minPrice)
-                .filter(flight -> maxPrice == null || flight.getPrice().doubleValue() <= maxPrice)
-                .map(flightMapper::toDto)
-                .toList();
+    public List<FlightDto> getFlights(FlightFilterCriteria criteria) {
+        List<FlightEntity> filteredFlights = FlightFilterHelper.filterFlights(flightRepository.findAll(), criteria);
+        List<FlightEntity> sortedFlights = FlightFilterHelper.sortFlights(filteredFlights, criteria.sortBy());
+        return flightMapper.toDtoList(sortedFlights);
     }
 
     public FlightDto getFlightById(Long id) {

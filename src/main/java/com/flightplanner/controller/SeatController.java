@@ -1,6 +1,7 @@
 package com.flightplanner.controller;
 
 import com.flightplanner.dto.SeatDto;
+import com.flightplanner.dto.SeatFilterCriteria;
 import com.flightplanner.service.SeatService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -37,8 +38,7 @@ public class SeatController {
             @RequestParam(required = false) Boolean seatsTogether,
             @RequestParam(required = false) String seatClass
     ) {
-        return ResponseEntity.ok(
-                seatService.getRecommendedSeatsForFlight(flightId, passengerCount, windowPreferred, extraLegroom, nearExit, seatsTogether, seatClass)
-        );
+        SeatFilterCriteria criteria = new SeatFilterCriteria(passengerCount, windowPreferred, extraLegroom, nearExit, seatsTogether, seatClass);
+        return ResponseEntity.ok(seatService.getRecommendedSeatsForFlight(flightId, criteria));
     }
 }
