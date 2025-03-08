@@ -18,9 +18,14 @@ public class SeatService {
     private final SeatRepository seatRepository;
     private final SeatMapper seatMapper;
 
-    public List<SeatDto> getRecommendedSeatsForFlight(Long flightId, SeatFilterCriteria criteria) {
+    public List<SeatDto> getRecommendedSeats(Long flightId, SeatFilterCriteria criteria) {
         List<SeatEntity> availableSeats = seatRepository.findByFlightId(flightId).stream().filter(seat -> !seat.getIsReserved()).toList();
         List<SeatEntity> filteredSeats = SeatFilterHelper.filterSeats(availableSeats, criteria);
         return seatMapper.toDtoList(filteredSeats);
+    }
+
+    public List<SeatDto> getAllSeats(Long flightId) {
+        List<SeatEntity> allSeats = seatRepository.findByFlightId(flightId);
+        return seatMapper.toDtoList(allSeats);
     }
 }

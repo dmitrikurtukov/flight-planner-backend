@@ -23,13 +23,13 @@ public class SeatController {
     private final SeatService seatService;
 
     @Operation(
-            summary = "Get seats by flight ID with optional recommendations",
-            description = "Retrieve a list of available seats for a given flight. If filters are provided, returns recommended seats based on criteria."
+            summary = "Get recommended seats by flight ID",
+            description = "Retrieve a list of recommended seats for a given flight based on criteria."
     )
-    @ApiResponse(responseCode = "200", description = "Successfully retrieved seats")
+    @ApiResponse(responseCode = "200", description = "Successfully retrieved recommended seats")
     @ApiResponse(responseCode = "400", description = "Invalid flight ID format")
     @GetMapping
-    public ResponseEntity<List<SeatDto>> getSeatsByFlightId(
+    public ResponseEntity<List<SeatDto>> getRecommendedSeatsByFlightId(
             @RequestParam Long flightId,
             @RequestParam(required = false) Integer passengerCount,
             @RequestParam(required = false) Boolean windowPreferred,
@@ -39,6 +39,17 @@ public class SeatController {
             @RequestParam(required = false) String seatClass
     ) {
         SeatFilterCriteria criteria = new SeatFilterCriteria(passengerCount, windowPreferred, extraLegroom, nearExit, seatsTogether, seatClass);
-        return ResponseEntity.ok(seatService.getRecommendedSeatsForFlight(flightId, criteria));
+        return ResponseEntity.ok(seatService.getRecommendedSeats(flightId, criteria));
+    }
+
+    @Operation(
+            summary = "Get all seats by flight ID",
+            description = "Retrieve a list of all seats for a given flight."
+    )
+    @ApiResponse(responseCode = "200", description = "Successfully retrieved all seats")
+    @ApiResponse(responseCode = "400", description = "Invalid flight ID format")
+    @GetMapping("/all")
+    public ResponseEntity<List<SeatDto>> getAllSeats(@RequestParam Long flightId) {
+        return ResponseEntity.ok(seatService.getAllSeats(flightId));
     }
 }

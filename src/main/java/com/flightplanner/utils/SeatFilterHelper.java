@@ -3,6 +3,7 @@ package com.flightplanner.utils;
 import com.flightplanner.dto.SeatFilterCriteria;
 import com.flightplanner.entity.SeatEntity;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -18,9 +19,8 @@ public class SeatFilterHelper {
                 .filter(seat -> criteria.seatClass() == null || seat.getSeatClass().equalsIgnoreCase(criteria.seatClass()))
                 .toList();
 
-        if (Boolean.TRUE.equals(criteria.seatsTogether()) && criteria.passengerCount() != null && criteria.passengerCount() > 1) {
+        if (Boolean.TRUE.equals(criteria.seatsTogether()) && criteria.passengerCount() != null && criteria.passengerCount() > 1)
             seats = filterSeatsTogether(seats, criteria.passengerCount());
-        }
 
         return seats;
     }
@@ -30,25 +30,47 @@ public class SeatFilterHelper {
     }
 
     private static boolean isExtraLegroom(SeatEntity seat) {
-        return seat.getSeatNumber().startsWith("1") || seat.getSeatNumber().startsWith("10");
+        String rowNumber = seat.getSeatNumber().replaceAll("\\D", "");
+        return rowNumber.equals("1") || rowNumber.equals("11");
     }
 
     private static boolean isNearExit(SeatEntity seat) {
-        return seat.getSeatNumber().startsWith("1")
-                || seat.getSeatNumber().startsWith("2")
-                || seat.getSeatNumber().startsWith("19")
-                || seat.getSeatNumber().startsWith("20");
+        String rowNumber = seat.getSeatNumber().replaceAll("\\D", "");
+        return rowNumber.equals("1")
+                || rowNumber.equals("2")
+                || rowNumber.equals("9")
+                || rowNumber.equals("10")
+                || rowNumber.equals("11")
+                || rowNumber.equals("12")
+                || rowNumber.equals("19")
+                || rowNumber.equals("20");
     }
 
-    public static List<SeatEntity> filterSeatsTogether(List<SeatEntity> seats, int passengerCount) {
-        Map<String, List<SeatEntity>> groupedByRow = seats.stream()
-                .collect(Collectors.groupingBy(seat -> seat.getSeatNumber().replaceAll("\\D", "")));
+    private static List<SeatEntity> filterSeatsTogether(List<SeatEntity> seats, int passengerCount) {
+        Map<String, List<SeatEntity>> groupedByRow = seats.stream().collect(Collectors.groupingBy(seat -> seat.getSeatNumber().replaceAll("\\D", "")));
+        List<String> sortedRows = groupedByRow.keySet().stream().sorted(Comparator.comparingInt(Integer::parseInt)).toList();
 
-        for (List<SeatEntity> rowSeats : groupedByRow.values()) {
-            if (rowSeats.size() >= passengerCount)
-                return rowSeats.subList(0, passengerCount);
+        for (String row : sortedRows) {
+            List<SeatEntity> rowSeats = groupedByRow.get(row);
+            rowSeats.sort(Comparator.comparing(SeatEntity::getSeatNumber));
+
+            for (int i = 0; i <= rowSeats.size() - passengerCount; i++) {
+                List<SeatEntity> possibleGroup = rowSeats.subList(i, i + passengerCount);
+                if (isSequential(possibleGroup)) return possibleGroup;
+            }
         }
 
         return seats;
+    }
+
+    private static boolean isSequential(List<SeatEntity> seats) {
+        for (int i = 0; i < seats.size() - 1; i++) {
+            char currentLetter = seats.get(i).getSeatNumber().charAt(seats.get(i).getSeatNumber().length() - 1);
+            char nextLetter = seats.get(i + 1).getSeatNumber().charAt(seats.get(i + 1).getSeatNumber().length() - 1);
+
+            if (nextLetter != currentLetter + 1) return false;
+        }
+
+        return true;
     }
 }
