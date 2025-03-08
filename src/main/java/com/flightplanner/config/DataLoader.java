@@ -21,7 +21,7 @@ public class DataLoader {
     private final SeatRepository seatRepository;
     private final Random random = new Random();
 
-    private static final List<String> DESTINATIONS = List.of("New York", "London", "Tokyo", "Paris", "Berlin", "Dubai", "Sydney", "Toronto");
+    private static final List<String> DESTINATIONS = List.of("New York", "London", "Tokyo", "Paris", "Berlin", "Dubai", "Sydney", "Toronto", "Miami", "Madrid", "Tallinn", "Helsinki");
 
     @PostConstruct
     public void loadData() {
@@ -83,10 +83,16 @@ public class DataLoader {
     }
 
     private BigDecimal randomPrice() {
-        return BigDecimal.valueOf((long) 100 + random.nextInt(401));
+        int price = 100 + random.nextInt(401); // 100 - 500
+        return BigDecimal.valueOf(roundToNearestFive(price));
     }
 
     private int randomDuration() {
-        return 60 + random.nextInt(181);
+        int duration = 60 + random.nextInt(181); // 60 - 240
+        return roundToNearestFive(duration);
+    }
+
+    private int roundToNearestFive(int number) {
+        return (int) (Math.round(number / 5.0) * 5);
     }
 }
