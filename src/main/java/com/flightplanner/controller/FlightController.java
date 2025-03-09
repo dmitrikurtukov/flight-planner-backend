@@ -37,12 +37,4 @@ public class FlightController {
         FlightFilterCriteria criteria = new FlightFilterCriteria(destination, departureDate, minDuration, maxDuration, minPrice, maxPrice, sortBy);
         return ResponseEntity.ok(flightService.getFlights(criteria));
     }
-
-    @Operation(summary = "Get flight by ID", description = "Retrieve a flight by its ID.")
-    @ApiResponse(responseCode = "200", description = "Successfully retrieved flight")
-    @ApiResponse(responseCode = "404", description = "Flight not found with given ID")
-    @GetMapping("/{id}")
-    public ResponseEntity<FlightDto> getFlightById(@PathVariable Long id) {
-        return ResponseEntity.ok(flightService.getFlightById(id));
-    }
 }
