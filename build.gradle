@@ -37,8 +37,16 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok'
     annotationProcessor 'org.mapstruct:mapstruct-processor:1.6.3'
     annotationProcessor 'org.projectlombok:lombok-mapstruct-binding:0.2.0'
+    testImplementation 'org.mockito:mockito-core:5.16.0'
+    testImplementation 'org.mockito:mockito-junit-jupiter:5.16.0'
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.11.1'
 }
 
 tasks.named('test') {
     useJUnitPlatform()
+}
+
+tasks.withType(Test).configureEach {
+    jvmArgs "-Xshare:off"
+    jvmArgs "-javaagent:" + configurations.testRuntimeClasspath.find { it.name.contains("byte-buddy-agent") }
 }
