@@ -35,8 +35,7 @@ If everything is set up correctly, you should be able to see running backend and
 
 http://localhost:8080/swagger-ui.html
 
-**P.S.** You can also run the backend application directly in IntelliJ instead of using a Docker container. Simply run the `FlightPlannerBackendApplication` class.  
-I highly recommend running the backend this way (while keeping the database container running in Docker) because, in some cases, unexpected errors occur when running it as a container, and I haven't been able to determine the exact cause.
+**P.S.** You can also run the backend application directly in IntelliJ instead of using a Docker container. Simply run the `FlightPlannerBackendApplication` class (while keeping the database container running in Docker, otherwise the application won't boot).
 
 
 ---
