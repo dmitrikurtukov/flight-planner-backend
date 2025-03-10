@@ -6,8 +6,11 @@ import com.flightplanner.service.SeatService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -22,6 +25,7 @@ import java.util.List;
 public class SeatController {
     private final SeatService seatService;
 
+    @Validated
     @Operation(
             summary = "Get recommended seats by flight ID",
             description = "Retrieve a list of recommended seats for a given flight based on criteria."
@@ -31,7 +35,7 @@ public class SeatController {
     @GetMapping
     public ResponseEntity<List<SeatDto>> getRecommendedSeatsByFlightId(
             @RequestParam Long flightId,
-            @RequestParam(required = false) Integer passengerCount,
+            @RequestParam(required = false) @Min(1) @Max(3) Integer passengerCount,
             @RequestParam(required = false) Boolean windowPreferred,
             @RequestParam(required = false) Boolean extraLegroom,
             @RequestParam(required = false) Boolean nearExit,

@@ -3,7 +3,7 @@
 This is the backend service for the **Flight Planner** application. It provides REST APIs for retrieving all or filtered flights and seats.
 The application allows users to choose a flight and receive seat recommendations based on available seats. 
 Flights can be filtered by destination, departure date, duration, and price, and sorted by price or departure date in both ascending and descending order. 
-Seat recommendations consider user preferences such as window seats, extra legroom, proximity to exits, and keeping seats together if traveling in a group. 
+Seat recommendations consider user preferences such as window seats, extra legroom, proximity to exits, and keeping seats together if traveling in a group (maximum of 3). 
 Flights and occupied seats are generated randomly.
 
 ## Tech Stack
